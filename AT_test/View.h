@@ -3,12 +3,14 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 
 #include "Element.h"
 
 using std::string;
 using std::map;
 using std::vector;
+using std::shared_ptr;
 
 /*
 	`View` -- класс, который отвечает за отображение элементов определенного типа(в данном случае `Element`).
@@ -38,11 +40,18 @@ struct View
 	View();
 
 	// `add` и `remove` вызываются чрезвычайно редко
-	void add(Element*);
-	void remove(Element*);
+	void add(Element* e);
+	void remove(Element* e);
 
 	//! Возвращает кол-во видимых элементов
 	int count() const;
 	//! Возвращает i-тый видимый элемент
 	Element* get(int i) const;
+	
+	// применим фильтр поиска по имени
+	void applyFilter(const string& filter);
+
+	// Элементы
+	vector<shared_ptr<Element>> elements;
+	vector<size_t> visibleItemIndexes;
 };
