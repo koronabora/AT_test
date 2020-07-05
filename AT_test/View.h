@@ -4,7 +4,9 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <iostream>
 
+#include "ItemBase.h"
 #include "Element.h"
 
 using std::string;
@@ -27,7 +29,7 @@ using std::shared_ptr;
 -----------------
 */
 
-struct View
+struct View: public ItemBase
 {
 	// `Range` является контейнером или массивом,
 	// у которого типом элемента является `Element*`
@@ -35,23 +37,25 @@ struct View
 	// вызову конструктора по умолчанию
 	// и вызову `add` на каждый элемент из `elements`
 	template<class Range>
-	View(Range& elements);
-
+	View(const Range& elements);
 	View();
 
+	// interface methods
 	// `add` и `remove` вызываются чрезвычайно редко
-	void add(Element* e);
-	void remove(Element* e);
+	void add(shared_ptr<ItemBase> e);
+	void remove(shared_ptr<ItemBase> e);
+	// применим фильтр поиска по имени. Вернет true, если элемент соотвествует
+	bool applyFilter(const string& filter);
 
 	//! Возвращает кол-во видимых элементов
-	int count() const;
+	size_t count() const;
 	//! Возвращает i-тый видимый элемент
-	Element* get(int i) const;
+	shared_ptr<ItemBase> get(size_t i) const;
 	
-	// применим фильтр поиска по имени
-	void applyFilter(const string& filter);
-
+	string currentFilter;
+	vector<size_t> visibleItems;
+	//void refilter();
+	
 	// Элементы
-	vector<shared_ptr<Element>> elements;
-	vector<size_t> visibleItemIndexes;
+	vector<shared_ptr<ItemBase>> elements;	
 };
