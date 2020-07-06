@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+#include <algorithm>
+#include <iterator>
+#include <string>
 
 using std::string;
 

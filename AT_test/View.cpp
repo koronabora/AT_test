@@ -7,7 +7,7 @@ View::View(const Range& elements)
 		add(e);
 }
 
-View::View() : ItemBase(this)
+View::View() : ItemBase()
 {}
 
 void View::add(shared_ptr<ItemBase> e)
@@ -38,7 +38,16 @@ void View::remove(shared_ptr<ItemBase> e)
 //! Возвращает кол-во видимых элементов
 size_t View::count() const
 {
+	//size_t res = 0;
+	/*for (const size_t& i : visibleItems)
+		if (elements[i])
+			res += elements[i]->count();*/
 	return visibleItems.size();
+}
+
+bool View::isLeaf()
+{
+	return false;
 }
 
 //! Возвращает i-тый видимый элемент
@@ -56,41 +65,16 @@ bool View::applyFilter(const string& filter)
 	currentFilter = filter;
 	visibleItems.clear();
 	bool res = false;
-	if (parent)
-		for (size_t i = 0; i < elements.size(); i++)
+	//if (parent)
+	for (size_t i = 0; i < elements.size(); i++)
+	{
+		shared_ptr<ItemBase> e = elements[i];
+		if (e && e->applyFilter(filter))
 		{
-			shared_ptr<ItemBase> e = elements[i];
-			if (e && e->applyFilter(filter))
-			{
-				visibleItems.push_back(i);
-				res = true;
-			}
-		}
-	return res;
-}
-
-/*void View::refilter()
-{
-	visibleItems.clear();
-	if (parent)
-	{	
-		for (size_t i = 0; i < elements.size(); i++)
-		{
-			shared_ptr<ItemBase> e = elements[i];
-			if (e && isItemNameOk(e->name))
-					visibleItems.push_back(i);
-			}
+			visibleItems.push_back(i);
+			res = true;
 		}
 	}
+	//cout << "For item [" << getName() << "] result -> " << res << endl;
+	return res;
 }
-
-bool View::isLeaf()
-{
-	return false;
-}
-
-bool View::isItemNameOk(const string& itemName)
-{
-	// TODO:
-	return true;
-}*/

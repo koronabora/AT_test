@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <windows.h>
 
 #include "ViewDebugger.h"
 
@@ -22,12 +23,13 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	//string path = argv[0];
-	string path = "D:\\2010";
+	SetConsoleOutputCP(65001);
+	string path = argv[0];
 	string foo;
 	cout << "Enter working directory [defalut - current]: ";
 	getline(cin, foo);
 	path = foo.empty() ? path : foo;
-	ViewDebugger::DebugView(path);
+	ViewDebugger vd;
+	vd.DebugView(path);
 	return 0;
 }

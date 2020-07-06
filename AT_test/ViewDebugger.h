@@ -20,22 +20,29 @@ using namespace std;
 */
 
 #ifdef _MSC_VER
-	const wchar_t PATH_DELIM = L'\\';
+	const char PATH_DELIM = '\\';
 #else
-	const wchar_t PATH_DELIM = L'//';
+	const char PATH_DELIM = '//';
 #endif
-const wstring FOLDER_ICON = L" 📁 ";
-const wstring SEARCH_ICON = L" 🔍 ";
-const wstring LAST_ELEM_PADDING = L" └── ";
-const wstring ELEM_PADDING = L" ├── ";
-const wstring SPACER_PADDING = L" │  ";
+const string FOLDER_ICON = " [F] ";
+const string SEARCH_ICON = " {?} ";
+const string LAST_ELEM_PADDING = "  \\ ";
+const string ELEM_PADDING = " |- ";
+const string NORMAL_SPACER_PADDING = " |  ";
+const string LAST_SPACER_PADDING = "     ";
+const string ESCAPE_SEQUENCE = "q";
+
+namespace fs = std::filesystem;
 
 struct ViewDebugger
 {
 	ViewDebugger();
 	~ViewDebugger();
-	static void DebugView(const string& path);
-	static void buildView(const vector<wstring>& files);
-	static shared_ptr<ItemBase> root;
-	static vector<wstring> split(const wstring& s);
+	void DebugView(const string& path);
+	void buildView(const vector<string>& files);
+	shared_ptr<ItemBase> root;
+	vector<string> split(const string& s);
+	vector<shared_ptr<ItemBase>> parseViewData(const vector<vector<string>> treeData, const size_t& currentLevel, const string& targetParentName);
+	void testLoop();
+	void printTree(const shared_ptr<ItemBase>& item, const string& prevPadding, const bool& isLastl);
 };

@@ -2,5 +2,7 @@
 
 bool Filter::isStringMatchingWithFilter(const string& s, const string& filter)
 {
-	return true;
+	size_t pos = s.find(filter);
+	return pos != string::npos;
+	//return true;
 }
