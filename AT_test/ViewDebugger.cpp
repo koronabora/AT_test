@@ -57,7 +57,7 @@ void ViewDebugger::testLoop()
 		cout << "------------------" << endl;
 		printTree(root, "", true);
 		cout << "------------------" << endl;
-		cout << "Enter filtering keyword or press [" << ESCAPE_SEQUENCE << "] for extit: ";
+		cout << "Enter filtering keyword or press [" << ESCAPE_SEQUENCE << "] for exit: ";
 		getline(cin, curFilter);
 		if (curFilter.compare(ESCAPE_SEQUENCE) == 0)
 			working = false;
@@ -69,7 +69,7 @@ void ViewDebugger::testLoop()
 void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& prevPadding, const bool& isLast)
 {
 	// construct spacer
-	if (item)
+	if (item && item->visible)
 	{
 		// tree node
 		string padding = prevPadding;

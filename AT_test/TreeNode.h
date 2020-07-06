@@ -23,6 +23,7 @@ struct TreeNode
 
 	shared_ptr<View> view = nullptr;
 	vector<shared_ptr<TreeNode>> next;
+	bool visible = true;
 
 	bool applyFilter(const string& filter)
 	{
@@ -32,6 +33,7 @@ struct TreeNode
 		for (auto& e : next)
 			if (e && e->applyFilter(filter))
 					res = true;
+		visible = res;
 		return res;
 	}
 
