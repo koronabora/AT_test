@@ -4,7 +4,6 @@
 #include <string>
 #include <map>
 
-#include "ItemBase.h"
 #include "Filter.h"
 
 using std::string;
