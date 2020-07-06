@@ -24,12 +24,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	SetConsoleOutputCP(65001);
-	string path = argv[0];
-	string foo;
-	cout << "Enter working directory [defalut - current]: ";
-	getline(cin, foo);
-	path = foo.empty() ? path : foo;
 	ViewDebugger vd;
-	vd.DebugView(path);
+	vd.DebugView("");
 	return 0;
 }

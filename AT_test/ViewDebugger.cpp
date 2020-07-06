@@ -77,7 +77,6 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 		string s = padding;
 		s.append(FOLDER_ICON);
 		s.append(item->getName());
-		//s.append(SEARCH_ICON);
 		cout << s << endl;
 
 		if (!item->view)
