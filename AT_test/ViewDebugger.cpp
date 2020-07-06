@@ -2,7 +2,8 @@
 
 ViewDebugger::ViewDebugger()
 {
-	root = make_shared<View>();
+	root = make_shared<TreeNode>();
+	root->setName("R");
 }
 
 ViewDebugger::~ViewDebugger()
@@ -11,106 +12,34 @@ ViewDebugger::~ViewDebugger()
 
 void ViewDebugger::DebugView(const string& path)
 {
-	try
-	{
-		filesystem::path p(path);
-		if (!filesystem::is_directory(p))
-			p = p.parent_path();
-		wcout << L"Working with path: [" << p.wstring() << L"]" << endl;
-		vector<string> fileNames;// = { p.string() };
-		for (auto& el : filesystem::recursive_directory_iterator(p, filesystem::directory_options::skip_permission_denied))
+	if (root)
+		for (size_t i = 0; i < 3; i++)
 		{
-				fileNames.push_back(el.path().string());
-		}
-		buildView(fileNames);
-	}
-	catch (...)
-	{
-		wcout << L"Filessytem exception" << endl;
-	}
-}
-
-// using code from http://www.martinbroadhurst.com/how-to-split-a-string-in-c.html
-vector<string> ViewDebugger::split(const string& s)
-{
-	vector<string> res;
-	size_t current, previous = 0;
-	current = s.find_first_of(PATH_DELIM);
-	while (current != std::string::npos) {
-		res.push_back(s.substr(previous, current - previous));
-		previous = current + 1;
-		current = s.find_first_of(PATH_DELIM, previous);
-	}
-	res.push_back(s.substr(previous, current - previous));
-	return res;
-}
-
-void ViewDebugger::buildView(const vector<string>& files)
-{
-	// split to vector<vector<wstring>>	
-	vector<vector<string>> treeData;
-	for (const string& ws : files)
-		treeData.push_back(split(ws));
-
-	// analyze data and build tree
-	if (!treeData.empty() && !treeData[0].empty())
-	{
-		// first element is root
-		root->setName(treeData[0][0]);
-		vector<shared_ptr<ItemBase>> items = parseViewData(treeData, 1, treeData[0][0]);
-		for (shared_ptr<ItemBase>& e : items)
-		{
-			e->setParent(root.get());
-			root->add(e);
-		}
-	}
-
-	// view tree
-	testLoop();
-}
-
-vector<shared_ptr<ItemBase>> ViewDebugger::parseViewData(const vector<vector<string>> treeData, const size_t& currentLevel, const string& targetParentName)
-{
-	vector<shared_ptr<ItemBase>> items; // cur level items
-	vector<string> viewNames; // view names at current item
-	for (vector<string> v : treeData)
-	{
-		if (v.size() > currentLevel && currentLevel > 0)
-		{
-			string parentName = v[currentLevel - 1];
-			string curName = v[currentLevel];
-			if (parentName == targetParentName)
-				if (v.size() - 1 == currentLevel)
+			shared_ptr<TreeNode> node0 = make_shared<TreeNode>();
+			node0->setParent(root.get());
+			node0->setName(to_string(i+1));
+			root->addChildren(node0);
+			for (size_t j = 0; j < 3; j++)
+			{
+				shared_ptr<TreeNode> node1 = make_shared<TreeNode>();
+				node1->setParent(node0.get());
+				node1->setName(to_string(j+1));
+				node0->addChildren(node1);
+				for (size_t l = 0; l < 3; l++)
 				{
-					// element
-					auto el = make_shared<Element>();
-					el->setName(curName);
-					items.push_back(el);
-				}
-				else
-				{
-					// view
-					// check is new item unique
-					auto pos = find(viewNames.begin(), viewNames.end(), curName);
-					if (pos == viewNames.end())
+					shared_ptr<View> view = make_shared<View>();
+					node1->setView(view);
+					for (size_t k = 0; k < 3; k++)
 					{
-						shared_ptr<ItemBase> rootItem = make_shared<View>();
-						items.push_back(rootItem);
-						rootItem->setName(curName);
-						viewNames.push_back(curName);
-						vector<shared_ptr<ItemBase>> items = parseViewData(treeData, currentLevel + 1, curName);
-						//wcout << L"Found " << items.size() << L" items for root [" << curName.c_str() << L"]" << endl;
-						for (shared_ptr<ItemBase>& e : items)
-						{
-							e->setParent(rootItem.get());
-							rootItem->add(e);
-						}
-
+						auto e = make_shared<Element>();
+						e->name = to_string(i * 100 + j * 10 + k + 1) + ".txt";
+						view->add(e);
 					}
 				}
+			}
+			// view tree
+			testLoop();
 		}
-	}
-	return items;
 }
 
 void ViewDebugger::testLoop()
@@ -137,34 +66,48 @@ void ViewDebugger::testLoop()
 	}
 }
 
-void ViewDebugger::printTree(const shared_ptr<ItemBase>& item, const string& prevPadding, const bool& isLast)
+void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& prevPadding, const bool& isLast)
 {
 	// construct spacer
 	if (item)
 	{
-		string s = prevPadding;
-		s.append(isLast ? LAST_ELEM_PADDING : ELEM_PADDING);
-		if (!item->isLeaf())
-			s.append(FOLDER_ICON);
+		// tree node
+		string padding = prevPadding;
+		padding.append(isLast ? LAST_ELEM_PADDING : ELEM_PADDING);
+		string s = padding;
+		s.append(FOLDER_ICON);
 		s.append(item->getName());
-		if (!item->isLeaf())
-			s.append(SEARCH_ICON);
-		//if (item->isLeaf())
-			cout << s << endl;
+		//s.append(SEARCH_ICON);
+		cout << s << endl;
 
-		// view child items
-		string newPadding = prevPadding;
-		if (item->count() == 1)
-			newPadding += LAST_SPACER_PADDING;
+		if (!item->view)
+		{	
+			auto children = item->getChild();
+			for (size_t i = 0; i < children.size(); i++)
+			{
+				if (children[i])
+				{
+					bool last = (i == children.size() - 1);
+					printTree(children[i], padding, last);
+				}
+			}
+		}
 		else
-			newPadding += NORMAL_SPACER_PADDING;
-		for (size_t i = 0; i < item->count(); i++)
 		{
-			shared_ptr<ItemBase> e = item->get(i);
-			bool last = false;
-			if (i == item->count() - 1)
-				last = true;
-			printTree(e, newPadding, last);
+			// view child items
+			auto view = item->view;
+			size_t count = view->count();
+			for (size_t i = 0; i < count; i++)
+			{
+				auto elem = view->get(i);
+				if (elem)
+				{
+					padding = prevPadding;
+					padding.append((i == count - 1) ? LAST_ELEM_PADDING : ELEM_PADDING);
+					s = padding + elem->name;
+					cout << s << endl;
+				}
+			}
 		}
 	}
 }

@@ -163,7 +163,7 @@
   <ItemGroup>
     <ClInclude Include="Element.h" />
     <ClInclude Include="Filter.h" />
-    <ClInclude Include="ItemBase.h" />
+    <ClInclude Include="TreeNode.h" />
     <ClInclude Include="ViewDebugger.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>

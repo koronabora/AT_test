@@ -29,7 +29,7 @@ using std::shared_ptr;
 -----------------
 */
 
-struct View : public ItemBase
+struct View
 {
 	// `Range` является контейнером или массивом,
 	// у которого типом элемента является `Element*`
@@ -40,10 +40,9 @@ struct View : public ItemBase
 	View(const Range& elements);
 	View();
 
-	// interface methods
 	// `add` и `remove` вызываются чрезвычайно редко
-	void add(shared_ptr<ItemBase> e);
-	void remove(shared_ptr<ItemBase> e);
+	void add(shared_ptr<Element> e);
+	void remove(shared_ptr<Element> e);
 	// применим фильтр поиска по имени. Вернет true, если элемент соотвествует
 	bool applyFilter(const string& filter);
 
@@ -51,12 +50,11 @@ struct View : public ItemBase
 	virtual size_t count() const;
 
 	//! Возвращает i-тый видимый элемент
-	shared_ptr<ItemBase> get(size_t i) const;
+	shared_ptr<Element> get(size_t i) const;
 
 	string currentFilter;
 	vector<size_t> visibleItems;
-	bool isLeaf();
 
 	// Элементы
-	vector<shared_ptr<ItemBase>> elements;
+	vector<shared_ptr<Element>> elements;
 };

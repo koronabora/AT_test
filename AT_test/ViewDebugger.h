@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include "View.h"
+#include "TreeNode.h"
 
 using namespace std;
 
@@ -19,11 +20,6 @@ using namespace std;
 		├── 📁 B 🔍
 */
 
-#ifdef _MSC_VER
-	const char PATH_DELIM = '\\';
-#else
-	const char PATH_DELIM = '//';
-#endif
 const string FOLDER_ICON = " [F] ";
 const string SEARCH_ICON = " {?} ";
 const string LAST_ELEM_PADDING = "  \\ ";
@@ -39,10 +35,7 @@ struct ViewDebugger
 	ViewDebugger();
 	~ViewDebugger();
 	void DebugView(const string& path);
-	void buildView(const vector<string>& files);
-	shared_ptr<ItemBase> root;
-	vector<string> split(const string& s);
-	vector<shared_ptr<ItemBase>> parseViewData(const vector<vector<string>> treeData, const size_t& currentLevel, const string& targetParentName);
+	shared_ptr<TreeNode> root;
 	void testLoop();
-	void printTree(const shared_ptr<ItemBase>& item, const string& prevPadding, const bool& isLastl);
+	void printTree(const shared_ptr<TreeNode>& item, const string& prevPadding, const bool& isLastl);
 };
