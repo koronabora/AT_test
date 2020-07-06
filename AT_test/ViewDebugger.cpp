@@ -17,13 +17,13 @@ void ViewDebugger::DebugView(const string& path)
 		{
 			shared_ptr<TreeNode> node0 = make_shared<TreeNode>();
 			node0->setParent(root.get());
-			node0->setName(to_string(i+1));
+			node0->setName(to_string(i + 1));
 			root->addChildren(node0);
 			for (size_t j = 0; j < 3; j++)
 			{
 				shared_ptr<TreeNode> node1 = make_shared<TreeNode>();
 				node1->setParent(node0.get());
-				node1->setName(to_string(j+1));
+				node1->setName(to_string(j + 1));
 				node0->addChildren(node1);
 				for (size_t l = 0; l < 3; l++)
 				{
@@ -37,9 +37,9 @@ void ViewDebugger::DebugView(const string& path)
 					}
 				}
 			}
-			// view tree
-			testLoop();
 		}
+	// view tree
+	testLoop();
 }
 
 void ViewDebugger::testLoop()
@@ -81,7 +81,7 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 		cout << s << endl;
 
 		if (!item->view)
-		{	
+		{
 			auto children = item->getChild();
 			for (size_t i = 0; i < children.size(); i++)
 			{
