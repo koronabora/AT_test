@@ -13,7 +13,7 @@ using std::string;
 
 struct Filter
 {
-	static size_t getLastFilterId();
+	static size_t getNewFilterId();
 	static bool isStringMatchingWithFilter(const string& s, const map<size_t, string>& filters);
 	static void mergeFilters(map<size_t, string>& filters, const map<size_t, string>& newFilters);
 	static void clearFilters(map<size_t, string>& filters);

@@ -22,7 +22,7 @@ struct TreeNode
 
 
 	map<size_t, string> getFilters() { return nodeFilters; };
-	bool applyFilters(const map<size_t, string>& filters)
+	bool applyFilters(const map<size_t, string>& filters, const bool& isSideEffect = false )
 	{
 		// merge filters
 		Filter::mergeFilters(nodeFilters, filters);
@@ -49,4 +49,5 @@ private:
 	vector<shared_ptr<TreeNode>> next;
 	bool visible = true;
 	map<size_t, string> nodeFilters;
+	map<size_t, string> sideEffectFilters;
 };
