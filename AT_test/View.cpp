@@ -14,7 +14,7 @@ void View::add(shared_ptr<Element> e)
 {
 	if (e)
 	{
-		if (Filter::isStringMatchingWithFilter(e->name, currentFilter))
+		if (Filter::isStringMatchingWithFilter(e->name, filters))
 			visibleItems.push_back(elements.size());
 		elements.push_back(e);
 	}
@@ -51,9 +51,10 @@ shared_ptr<Element> View::get(size_t i) const
 }
 
 // применим фильтр поиска по имени
-bool View::applyFilter(const string& filter)
+bool View::applyFilters(const map<size_t, string>& newFilters)
 {
-	currentFilter = filter;
+	Filter::mergeFilters(filters, newFilters);
+	Filter::clearFilters(filters);
 	visibleItems.clear();
 	bool res = false;
 	//if (parent)
@@ -61,7 +62,7 @@ bool View::applyFilter(const string& filter)
 	{
 		shared_ptr<Element> e = elements[i];
 		if (e)
-			if (Filter::isStringMatchingWithFilter(e->name, filter))
+			if (Filter::isStringMatchingWithFilter(e->name, filters))
 			{
 				visibleItems.push_back(i);
 				res = true;

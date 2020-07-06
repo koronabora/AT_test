@@ -62,14 +62,18 @@ void ViewDebugger::testLoop()
 		if (curFilter.compare(ESCAPE_SEQUENCE) == 0)
 			working = false;
 		else  if (root)
-			root->applyFilter(curFilter);
+		{
+			map<size_t, string> filters = root->getFilters();
+
+			root->applyFilters(filters);
+		}
 	}
 }
 
 void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& prevPadding, const bool& isLast)
 {
 	// construct spacer
-	if (item && item->visible)
+	if (item && item->isVisible())
 	{
 		// tree node
 		string padding = prevPadding;
@@ -79,7 +83,7 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 		s.append(item->getName());
 		cout << s << endl;
 
-		if (!item->view)
+		if (!item->getView())
 		{
 			auto children = item->getChild();
 			for (size_t i = 0; i < children.size(); i++)
@@ -94,7 +98,7 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 		else
 		{
 			// view child items
-			auto view = item->view;
+			auto view = item->getView();
 			size_t count = view->count();
 			for (size_t i = 0; i < count; i++)
 			{

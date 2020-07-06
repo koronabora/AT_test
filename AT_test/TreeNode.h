@@ -18,23 +18,35 @@ struct TreeNode
 	void addChildren(shared_ptr<TreeNode> e) { next.push_back(e); };
 	vector<shared_ptr<TreeNode>> getChild() const { return next; };
 
+	bool isVisible() const { return  visible; };
+
+
+	map<size_t, string> getFilters() { return nodeFilters; };
+	bool applyFilters(const map<size_t, string>& filters)
+	{
+		// merge filters
+		Filter::mergeFilters(nodeFilters, filters);
+
+		// apply new filters to each child
+		bool res = false;
+		if (view)
+			res = view->applyFilters(nodeFilters);
+		for (auto& e : next)
+			if (e && e->applyFilters(nodeFilters))
+				res = true;
+		visible = res;
+		// remove empty filters
+		Filter::clearFilters(nodeFilters);
+		return res;
+	}
+
+private:
+
 	TreeNode* parent = nullptr;
 	string name;
 
 	shared_ptr<View> view = nullptr;
 	vector<shared_ptr<TreeNode>> next;
 	bool visible = true;
-
-	bool applyFilter(const string& filter)
-	{
-		bool res = false;
-		if (view)
-			res = view->applyFilter(filter);
-		for (auto& e : next)
-			if (e && e->applyFilter(filter))
-					res = true;
-		visible = res;
-		return res;
-	}
-
+	map<size_t, string> nodeFilters;
 };

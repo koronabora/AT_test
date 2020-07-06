@@ -45,7 +45,7 @@ struct View
 	void add(shared_ptr<Element> e);
 	void remove(shared_ptr<Element> e);
 	// применим фильтр поиска по имени. Вернет true, если элемент соотвествует
-	bool applyFilter(const string& filter);
+	bool applyFilters(const map<size_t, string>& newFilters);
 
 	//! Возвращает кол-во видимых элементов
 	virtual size_t count() const;
@@ -53,7 +53,7 @@ struct View
 	//! Возвращает i-тый видимый элемент
 	shared_ptr<Element> get(size_t i) const;
 
-	string currentFilter;
+	map<size_t, string> filters;
 	vector<size_t> visibleItems;
 
 	// Элементы

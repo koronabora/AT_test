@@ -20,8 +20,7 @@ using namespace std;
 		├── 📁 B 🔍
 */
 
-const string FOLDER_ICON = " [F] ";
-const string SEARCH_ICON = " {?} ";
+const string FOLDER_ICON = " <F> ";
 const string LAST_ELEM_PADDING = "  \\ ";
 const string ELEM_PADDING = " |- ";
 const string NORMAL_SPACER_PADDING = " |  ";
