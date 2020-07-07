@@ -40,11 +40,17 @@ void Filter::mergeFilters(map<size_t, string>& filters, const map<size_t, string
 
 void Filter::clearFilters(map<size_t, string>& filters)
 {
-	for (auto i=filters.begin(); i!=filters.end(); i++)
-		if (i->second.empty())
-		{
-			filters.erase(i->first);
-			if (!filters.empty())
-			i--;
-		}
+	// ниасилил правильную работу с итераторами после удаления... хнык хнык
+	bool ready = true;
+	while (ready)
+	{
+		ready = false;
+		for (const auto& e : filters)
+			if (e.second.empty())
+			{
+				filters.erase(e.first);
+				ready = true;
+				break;
+			}
+	}
 }

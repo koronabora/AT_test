@@ -146,7 +146,7 @@ size_t ViewDebugger::getLineIdByNode(const shared_ptr<TreeNode>& node)
 void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& prevPadding, const bool& isLast)
 {
 	// construct spacer
-	if (item && item->isVisible())
+	if (item)
 	{
 		// tree node
 		cout << "[" << getLineIdByNode(item) << "] ";
@@ -168,17 +168,17 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 
 		if (!item->getView())
 		{
-			auto children = item->getChild();
-			for (size_t i = 0; i < children.size(); i++)
-			{
-				if (children[i])
+				auto children = item->getChild();
+				for (size_t i = 0; i < children.size(); i++)
 				{
-					bool last = (i == children.size() - 1);
-					printTree(children[i], padding, last);
-				}
-			}
+					if (children[i])
+					{
+						bool last = (i == children.size() - 1);
+						printTree(children[i], padding, last);
+					}
+				}	
 		}
-		else
+		else if (item->isVisible())
 		{
 			// view child items
 			auto view = item->getView();
@@ -188,7 +188,7 @@ void ViewDebugger::printTree(const shared_ptr<TreeNode>& item, const string& pre
 				auto elem = view->get(i);
 				if (elem)
 				{
-					cout << "[X] ";
+					cout << "[ ] ";
 					padding = prevPadding;
 					padding.append((i == count - 1) ? LAST_ELEM_PADDING : ELEM_PADDING);
 					s = padding + elem->name;
